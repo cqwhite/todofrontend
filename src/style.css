@@ -62,6 +62,8 @@ h1 {
 
 .task-item button.delete-button {
   background-color: #dc3545;
+  width: 60px;
+
 }
 
 .task-item button:hover {

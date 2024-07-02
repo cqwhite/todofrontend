@@ -1,9 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { v4 } from 'uuid';
 
-const TaskItem = ({ task, onDelete, onComplete, onAddSubTask, isTopLevel = true }) => {
+const TaskItem = ({ task, onDelete, onDeleteSubTask, onComplete, onAddSubTask, isTopLevel = true }) => {
     const [showDetails, setShowDetails] = useState(false);
     const [subTaskDescription, setSubTaskDescription] = useState('');
+    const [subTaskMoreDetails, setSubTaskMoreDetails] = useState('');
     const [isComplete, setIsComplete] = useState(task.isComplete);
+
+    useEffect(() => {
+        setIsComplete(task.isComplete);
+    }, [task.isComplete]);
 
     const handleCheckboxChange = () => {
         const newIsComplete = !isComplete;
@@ -15,14 +21,18 @@ const TaskItem = ({ task, onDelete, onComplete, onAddSubTask, isTopLevel = true 
         onDelete(task.uid);
     };
 
+    const handleDeleteSubTask = () => {
+        onDeleteSubTask(task.uid, task.parentUid);
+    };
+
     const handleAddSubTask = (e) => {
         e.preventDefault();
         const newSubTask = {
-            uid: generateGUID(),
+            uid: v4(),
             description: subTaskDescription,
             deadlineDate: new Date().toISOString(),
             isComplete: false,
-            moreDetails: '',
+            moreDetails: subTaskMoreDetails,
             subTasks: [],
         };
         const updatedTask = {
@@ -51,12 +61,9 @@ const TaskItem = ({ task, onDelete, onComplete, onAddSubTask, isTopLevel = true 
                 onChange={handleCheckboxChange}
             />
             <span>{task.description}</span>
-
-            {isTopLevel && (
-                <button onClick={() => setShowDetails(!showDetails)}>
-                    {showDetails ? 'Hide Details' : 'More Details'}
-                </button>
-            )}
+            <button onClick={() => setShowDetails(!showDetails)}>
+                {showDetails ? 'Hide Details' : 'More Details'}
+            </button>
             {showDetails && (
                 <div className="details">
                     <p>{task.moreDetails}</p>
@@ -66,14 +73,15 @@ const TaskItem = ({ task, onDelete, onComplete, onAddSubTask, isTopLevel = true 
                 {(task.subTasks || []).map((subTask) => (
                     <TaskItem
                         key={subTask.uid}
-                        task={{ ...subTask, parentUid: task.uid }}
-                        onDelete={onDelete}
+                        task={{...subTask, parentUid: task.uid}}
+                        onDeleteSubTask={onDeleteSubTask}
                         onComplete={onComplete}
                         onAddSubTask={onAddSubTask}
                         isTopLevel={false}
                     />
                 ))}
             </div>
+            {!isTopLevel && <button className="delete-button" onClick={handleDeleteSubTask}>Delete</button>}
             {isTopLevel && <button className="delete-button" onClick={handleDelete}>Delete</button>}
             {isTopLevel && (
                 <form onSubmit={handleAddSubTask}>
@@ -84,19 +92,18 @@ const TaskItem = ({ task, onDelete, onComplete, onAddSubTask, isTopLevel = true 
                         placeholder="Subtask description"
                         required
                     />
+                    <input
+                        type="text"
+                        value={subTaskMoreDetails}
+                        onChange={(e) => setSubTaskMoreDetails(e.target.value)}
+                        placeholder="Subtask moreDetails"
+                        required
+                    />
                     <button type="submit">Add Subtask</button>
                 </form>
             )}
         </div>
     );
 };
-
-const generateGUID = () => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-        const r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 0x3 | 0x8);
-        return v.toString(16);
-    });
-};
-
 
 export default TaskItem;

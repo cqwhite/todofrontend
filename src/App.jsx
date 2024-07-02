@@ -12,7 +12,6 @@ const App = () => {
     return (
         <div className="App">
             <h1>Todo!</h1>
-            <p>Struggled with updating state completing a task, refresh to see change</p>
             <TaskList tasks={tasks} setTasks={setTasks} />
         </div>
     );

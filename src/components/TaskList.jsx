@@ -22,6 +22,21 @@ const TaskList = () => {
             .then(() => setTasks(tasks.filter(task => task.uid !== uid)));
     };
 
+    const handleDeleteSubTask = (uid, parentUid) => {
+        const parentTask = tasks.find(task => task.uid === parentUid);
+        parentTask.subTasks = parentTask.subTasks.filter(subTask => subTask.uid !== uid)
+        fetch(`http://localhost:5154/api/taskItem/${parentUid}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(parentTask),
+        })
+            .then(response => response.json())
+            .then(updatedParentTask => {
+                handleTaskChange(parentUid, updatedParentTask.result);
+            });
+
+    }
+
     const handleComplete = (uid, isComplete, parentUid = null) => {
         if (parentUid) {
             const parentTask = tasks.find(task => task.uid === parentUid);
@@ -36,8 +51,9 @@ const TaskList = () => {
                     body: JSON.stringify(updatedParentTask),
                 })
                     .then(response => response.json())
-                    .then(updatedTask => {
-                        setTasks(tasks.map(task => (task.uid === parentUid ? updatedTask : task)));
+                    .then(updatedParentTask => {
+                        console.log('Updated Parent Task:', updatedParentTask.result);
+                        handleTaskChange(parentUid, updatedParentTask.result);
                     });
             }
         } else {
@@ -50,16 +66,18 @@ const TaskList = () => {
                     body: JSON.stringify(updatedTask),
                 })
                     .then(response => response.json())
-                    .then(updatedTask => {
-                        setTasks(tasks.map(task => (task.uid === uid ? updatedTask : task)));
+                    .then(updatedTaskItem => {
+                        console.log('Updated Task:', updatedTaskItem);
+                        handleTaskChange(uid, updatedTaskItem.result);
                     });
             }
         }
     };
 
-    const handleAddSubTask = (parentUid, updatedTask) => {
-        setTasks(tasks.map(task => (task.uid === parentUid ? updatedTask : task)));
+    const handleTaskChange = (uid, updatedTask) => {
+        setTasks(tasks.map(task => (task.uid === uid ? updatedTask : task)));
     };
+
 
     const handleAddTask = (newTask) => {
         setTasks([...tasks, newTask]);
@@ -73,8 +91,9 @@ const TaskList = () => {
                     key={task.uid}
                     task={task}
                     onDelete={handleDelete}
+                    onDeleteSubTask={handleDeleteSubTask}
                     onComplete={handleComplete}
-                    onAddSubTask={handleAddSubTask}
+                    onAddSubTask={handleTaskChange}
                     isTopLevel={true}
                 />
             ))}
