@@ -1,6 +1,6 @@
 body {
   display: flex;
-  justify-content: flex-start;
+  justify-content: center;
   padding: 20px;
   background-color: #f0f0f0;
   font-family: Arial, sans-serif;
@@ -80,7 +80,7 @@ h1 {
 
 .task-item .details {
   padding: 10px;
-  background-color: #f1f1f1;
+  background-color: #e6e2ab;
   border-radius: 5px;
 }
 
@@ -88,4 +88,50 @@ h1 {
   margin-top: 10px;
   padding-left: 20px;
   border-left: 2px solid #ddd;
+}
+
+.task-form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-form-input,
+.task-form-textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.task-form-input:focus,
+.task-form-textarea:focus {
+  outline: none;
+  border-color: #007BFF;
+}
+
+.task-form-textarea {
+  resize: vertical;
+  height: 100px;
+}
+
+.task-form-button {
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007BFF;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.task-form-button:hover {
+  background-color: #0056b3;
 }

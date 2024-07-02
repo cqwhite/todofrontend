@@ -57,6 +57,7 @@ const TaskItem = ({ task, onDelete, onDeleteSubTask, onComplete, onAddSubTask, i
         <div className={`task-item ${isOverdue ? 'overdue' : ''}`}>
             <input
                 type="checkbox"
+                className="checkbox"
                 checked={isComplete}
                 onChange={handleCheckboxChange}
             />

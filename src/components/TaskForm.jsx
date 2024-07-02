@@ -29,8 +29,9 @@ const TaskForm = ({ onAddTask }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form className="task-form" onSubmit={handleSubmit}>
             <input
+                className="task-form-input"
                 type="text"
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -38,17 +39,19 @@ const TaskForm = ({ onAddTask }) => {
                 required
             />
             <input
+                className="task-form-input"
                 type="date"
                 value={deadlineDate}
                 onChange={(e) => setDeadlineDate(e.target.value)}
                 required
             />
             <textarea
+                className="task-form-textarea"
                 value={moreDetails}
                 onChange={(e) => setMoreDetails(e.target.value)}
                 placeholder="More details"
             />
-            <button type="submit">Add Task</button>
+            <button className="task-form-button" type="submit">Add Task</button>
         </form>
     );
 };
