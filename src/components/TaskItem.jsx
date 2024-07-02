@@ -98,7 +98,6 @@ const TaskItem = ({ task, onDelete, onDeleteSubTask, onComplete, onAddSubTask, i
                         value={subTaskMoreDetails}
                         onChange={(e) => setSubTaskMoreDetails(e.target.value)}
                         placeholder="Subtask moreDetails"
-                        required
                     />
                     <button type="submit">Add Subtask</button>
                 </form>
